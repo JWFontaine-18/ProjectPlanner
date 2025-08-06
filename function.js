@@ -37,6 +37,8 @@ class TaskManager {
     document.getElementById("completed").addEventListener("click", () => {
       this.showCompletedTask();
     });
+
+    // Login button redirects to Home.html
   }
 
   loadTasksFromStorage() {

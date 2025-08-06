@@ -26,7 +26,7 @@ signUp.addEventListener("click", function (e) {
     .then((userCredential) => {
       // Signed up
       const user = userCredential.user;
-      alert("user created");
+      window.location.href = "Home.html";
     })
     .catch((error) => {
       const errorCode = error.code;
