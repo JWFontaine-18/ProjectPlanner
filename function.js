@@ -15,24 +15,6 @@ class TaskManager {
       this.addTask();
     });
 
-    document.getElementById("signupBtn").addEventListener("click", () => {
-      // create user function
-      const email = document.getElementById("emailInput").value;
-      const password = document.getElementById("passwordInput").value;
-      this.createUser(email, password);
-    });
-
-    document.getElementById("loginBtn").addEventListener("click", () => {
-      // create user function
-      const email = document.getElementById("emailInput").value;
-      const password = document.getElementById("passwordInput").value;
-      this.LogInUser(email, password);
-    });
-
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      this.signOut();
-    });
-
     // Enter key on input
     document
       .getElementById("userInput")
@@ -167,62 +149,6 @@ class TaskManager {
 
   printTasks() {
     console.log("All Tasks:", this.tasks);
-  }
-
-  createUser(email, password) {
-    const auth = window.firebaseAuth;
-    const createUserWithEmailAndPassword =
-      window.createUserWithEmailAndPassword;
-    if (!auth || !createUserWithEmailAndPassword) {
-      alert("Firebase Auth not loaded.");
-      return;
-    }
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        alert("User created: " + user.email);
-      })
-      .catch((error) => {
-        alert("Error: " + error.message);
-      });
-  }
-  LogInUser(email, password) {
-    const auth = window.firebaseAuth;
-    const signInWithEmailAndPassword = window.signInWithEmailAndPassword;
-    if (!auth || !signInWithEmailAndPassword) {
-      alert("Firebase Auth not loaded.");
-      return;
-    }
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        alert("User logged in: " + user.email);
-
-        // Update UI for logged-in state
-        document.getElementById("logoutBtn").style.display = "inline-block";
-        document.getElementById("signupBtn").style.display = "none";
-        document.getElementById("loginBtn").style.display = "none";
-
-        // Optionally display the user's email
-        const userEmailDisplay = document.createElement("p");
-        userEmailDisplay.id = "userEmailDisplay";
-        userEmailDisplay.textContent = "Logged in as: " + user.email;
-        document.getElementById("auth-section").appendChild(userEmailDisplay);
-      })
-      .catch((error) => {
-        alert("Error: " + error.message);
-      });
-  }
-
-  signOut() {
-    const auth = window.firebaseAuth;
-    signOut(auth)
-      .then(() => {
-        alert("Sign in successful");
-      })
-      .catch((error) => {
-        // An error happened.
-      });
   }
 }
 

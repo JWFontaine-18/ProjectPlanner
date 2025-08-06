@@ -6,6 +6,7 @@
     <title>Task Tracker</title>
     <link rel="stylesheet" href="style.css" />
     <script src="function.js" defer></script>
+    <script type="module" src="firebase.js" defer></script>
   </head>
   <body>
     <h1>Task Tracker V1</h1>
@@ -44,35 +45,5 @@
       <h3>Completed Tasks</h3>
       <ul id="completedTask"></ul>
     </div>
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-      import { getAuth } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-      import {
-        createUserWithEmailAndPassword,
-        signInWithEmailAndPassword,
-        signOut,
-      } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-      import { getFirestore } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
-      const firebaseConfig = {
-        apiKey: "AIzaSyCWnsx2bRkYNDJKYRbY2uwuz3Cdt1JWeiI",
-        authDomain: "tasktracker-c9a80.firebaseapp.com",
-        projectId: "tasktracker-c9a80",
-        storageBucket: "tasktracker-c9a80.firebasestorage.app",
-        messagingSenderId: "908532115036",
-        appId: "1:908532115036:web:0d4a26362edf81714aa899",
-      };
-
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-
-      window.firebaseAuth = auth;
-      window.firebaseDB = db;
-      window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
-      window.signInWithEmailAndPassword = signInWithEmailAndPassword;
-      window.signOut = signOut;
-    </script>
   </body>
 </html>
