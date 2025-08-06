@@ -1,0 +1,114 @@
+body {
+  background-image: url(imgs/spaceBackground.jpg);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+h1 {
+  text-align: center;
+  font-family: "Times New Roman", Times, serif;
+  color: white;
+}
+h3 {
+  text-align: center;
+  font-family: "Times New Roman", Times, serif;
+  color: white;
+}
+#add-task {
+  background: #4caf50; /* green for "add" */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+#remove {
+  background: #ff0000; /* green for "add" */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin-left: 10px;
+}
+.input-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+.task-input {
+  background: grey;
+  border: 10px;
+  border-radius: 10px;
+  padding: 10px;
+  width: 250px;
+}
+.task-input::placeholder {
+  color: black;
+}
+.lists {
+  list-style: none;
+  padding: 0;
+  margin: 20px auto; /* auto centers horizontally */
+  width: 300px;
+  text-align: center;
+
+  li {
+    display: flex; /* puts items in a row */
+    justify-content: space-between;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  #List button {
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  #List button:hover {
+    background: #e60000;
+  }
+  #List input[type="checkbox"] {
+    transform: scale(1.2);
+    cursor: pointer;
+  }
+  #List span {
+    flex: 1; /* span grows to fill space */
+    margin-left: 10px; /* space after checkbox */
+    font-size: 16px;
+  }
+}
+#productivity {
+  display: block;
+  margin: auto;
+  width: 30%;
+  height: 20%;
+}
+.filter-group {
+  display: flex;
+  justify-content: center;
+}
+#all {
+  display: flex;
+  justify-content: center;
+  width: 100px;
+}
+#completed {
+  display: flex;
+  justify-content: center;
+  width: 100px;
+}

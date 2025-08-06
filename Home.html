@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css" />
+    <script src="function.js" defer></script>
+    <!-- lets DOM finish before loading JS File-->
+  </head>
+  <body>
+    <title>Task Tracker</title>
+    <h1>Task Tracker V1</h1>
+    <img
+      src="imgs/improve-productivity.jpg"
+      alt="improve-productivity"
+      id="productivity"
+    />
+    <br />
+    <div class="input-area">
+      <input
+        type="text"
+        id="userInput"
+        name="Task"
+        placeholder="Enter Task"
+        class="task-input"
+      />
+      <button id="add-task" type="submit">Add Task</button>
+      <button id="remove" type="submit" onclick="removeTask()">
+        Delete List
+      </button>
+    </div>
+    <div class="filter-group">
+      <button class="filter-btn" id="all">Show All</button>
+      <button class="filter-btn" id="completed">✔</button>
+    </div>
+    <div class="lists">
+      <h3>All Tasks</h3>
+      <ul id="List"></ul>
+      <h3>Completed Tasks</h3>
+      <ul id="completedTask"></ul>
+    </div>
+  </body>
+</html>
