@@ -148,6 +148,10 @@ showCompletedTask() {
   });
 }
 
+printTasks() {
+  console.log("All Tasks:", this.tasks);
+}
+
 
 };
 
