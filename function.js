@@ -1,6 +1,75 @@
-let tasks = [];
+class TaskManager {
 
-function createListItem(task) {
+  constructor() {
+    this.tasks = [];
+    this.init();
+  }
+
+  init() {
+    this.loadTasksFromStorage();
+    this.setupEventListeners();
+  }
+
+   setupEventListeners() {
+    // Add task button
+    document.getElementById("add-task").addEventListener('click', () => {
+      this.addTask();
+    });
+
+    // Enter key on input
+    document.getElementById("userInput").addEventListener('keypress', (event) => {
+      if (event.key === "Enter") {
+        this.addTask();
+      }
+    });
+
+    // Remove all tasks button
+    document.getElementById("remove").addEventListener('click', () => {
+      this.removeAllTasks();
+    });
+
+    // Filter buttons
+    document.getElementById("all").addEventListener('click', () => {
+      this.showAll();
+    });
+
+    document.getElementById("completed").addEventListener('click', () => {
+      this.showCompletedTask();
+    });
+  }
+
+  loadTasksFromStorage() {
+  const storedData = localStorage.getItem("tasks");
+  try {
+    if (storedData && storedData !== "undefined") {
+      this.tasks = JSON.parse(storedData);
+      for (let task of this.tasks) {
+        this.createListItem(task);
+      }
+    }
+  } catch (error) {
+    console.error("Error parsing tasks from storage:", error);
+    this.tasks = []; // reset if bad data
+    localStorage.removeItem("tasks");
+  }
+}
+
+
+  addTask() {
+      const text = document.getElementById("userInput").value.trim();
+      if (!text) return; // prevent blanks
+
+      const newTask = { text: text, completed: false };
+      this.tasks.push(newTask);
+      localStorage.setItem("tasks", JSON.stringify(this.tasks));
+
+      this.createListItem(newTask); // use your function!
+
+      document.getElementById("userInput").value = "";
+}
+
+
+createListItem(task) {
   var li = document.createElement("li");
 
   const span = document.createElement("span");
@@ -13,10 +82,10 @@ function createListItem(task) {
   checkbox.type = "checkbox";
   checkbox.checked = task.completed;
 
-  checkbox.onchange = function () {
+  checkbox.onchange = () => {
     task.completed = checkbox.checked; // update the task
     span.style.textDecoration = checkbox.checked ? "line-through" : "none"; // strike or unstrike
-    localStorage.setItem("tasks", JSON.stringify(tasks)); // save
+    localStorage.setItem("tasks", JSON.stringify(this.tasks)); // save
     li.remove();
     if (checkbox.checked) {
       document.getElementById("completedTask").appendChild(li);
@@ -26,10 +95,10 @@ function createListItem(task) {
   const deleteBtn = document.createElement("button");
   deleteBtn.textContent = "Delete";
 
-  deleteBtn.onclick = function () {
+  deleteBtn.onclick = () => {
     li.remove();
-    tasks = tasks.filter((t) => t !== task);
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    this.tasks = this.tasks.filter((t) => t !== task);
+    localStorage.setItem("tasks", JSON.stringify(this.tasks));
   };
 
   li.appendChild(checkbox);
@@ -43,76 +112,45 @@ function createListItem(task) {
   }
 }
 
-function removeTask() {
+removeAllTasks() {
   // 1. Clear the list visually
   document.getElementById("List").innerHTML = "";
+  document.getElementById("completedTask").innerHTML = "";
 
   // 2. Clear the array
-  tasks = [];
+  this.tasks = [];
 
   // 3. Clear localStorage
   localStorage.removeItem("tasks");
 }
 
-window.onload = function () {
-  const storedData = localStorage.getItem("tasks");
-  if (storedData) {
-    tasks = JSON.parse(storedData);
-    for (let t of tasks) {
-      createListItem(t);
+showAll() {
+  const list = document.getElementById("List");
+  const list1 = document.getElementById("completedTask");
+  list.innerHTML = "";
+  list1.innerHTML = "";
+  this.tasks.forEach((task) => {
+    this.createListItem(task);
+  });
+}
+
+showCompletedTask() {
+  const list = document.getElementById("List");
+  const list1 = document.getElementById("completedTask");
+
+  list.innerHTML = "";
+  list1.innerHTML = "";
+
+  this.tasks.forEach((task) => {
+    if (task.completed) {
+      this.createListItem(task);
     }
-  }
+  });
+}
+
+
 };
 
-function addTask() {
-  const text = document.getElementById("userInput").value.trim();
-  if (!text) return; // prevent blanks
-
-  const newTask = { text: text, completed: false };
-  tasks.push(newTask);
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-
-  createListItem(newTask); // use your function!
-
-  document.getElementById("userInput").value = "";
-}
-
-document.getElementById("add-task").onclick = addTask;
-
-document
-  .getElementById("userInput")
-  .addEventListener("keypress", function (event) {
-    if (event.key === "Enter") {
-      addTask();
-    }
-  });
-
-function showAll() {
-  const list = document.getElementById("List");
-  const list1 = document.getElementById("completedTask");
-  list.innerHTML = "";
-  list1.innerHTML = "";
-  tasks.forEach((task) => {
-    createListItem(task);
-  });
-}
-
-document.getElementById("all").addEventListener("click", showAll);
-
-function showCompletedTask() {
-  const list = document.getElementById("List");
-  const list1 = document.getElementById("completedTask");
-
-  list.innerHTML = "";
-  list1.innerHTML = "";
-
-  tasks.forEach((task) => {
-    if (task.completed) {
-      createListItem(task);
-    }
-  });
-}
-
-document
-  .getElementById("completed")
-  .addEventListener("click", showCompletedTask);
+window.onload = function () {
+  window.taskManager = new TaskManager();
+};
