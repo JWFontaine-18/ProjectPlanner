@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Task Tracker</title>
     <link rel="stylesheet" href="style.css" />
     <script src="function.js" defer></script>
@@ -15,6 +15,14 @@
       id="productivity"
     />
     <br />
+    <div id="auth-section">
+      <input type="email" id="emailInput" placeholder="Email" />
+      <input type="password" id="passwordInput" placeholder="Password" />
+      <button id="signupBtn">Sign Up</button>
+      <button id="loginBtn">Login</button>
+      <button id="logoutBtn" style="display: none">Logout</button>
+    </div>
+
     <div class="input-area">
       <input
         type="text"
@@ -24,9 +32,7 @@
         class="task-input"
       />
       <button id="add-task" type="submit">Add Task</button>
-      <button id="remove" type="submit">
-        Delete List
-      </button>
+      <button id="remove" type="submit">Delete List</button>
     </div>
     <div class="filter-group">
       <button class="filter-btn" id="all">Show All</button>
@@ -38,5 +44,35 @@
       <h3>Completed Tasks</h3>
       <ul id="completedTask"></ul>
     </div>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+      import { getAuth } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+      import {
+        createUserWithEmailAndPassword,
+        signInWithEmailAndPassword,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+      import { getFirestore } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCWnsx2bRkYNDJKYRbY2uwuz3Cdt1JWeiI",
+        authDomain: "tasktracker-c9a80.firebaseapp.com",
+        projectId: "tasktracker-c9a80",
+        storageBucket: "tasktracker-c9a80.firebasestorage.app",
+        messagingSenderId: "908532115036",
+        appId: "1:908532115036:web:0d4a26362edf81714aa899",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      window.firebaseAuth = auth;
+      window.firebaseDB = db;
+      window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+      window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+      window.signOut = signOut;
+    </script>
   </body>
 </html>

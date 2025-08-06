@@ -1,5 +1,4 @@
 class TaskManager {
-
   constructor() {
     this.tasks = [];
     this.init();
@@ -10,150 +9,222 @@ class TaskManager {
     this.setupEventListeners();
   }
 
-   setupEventListeners() {
+  setupEventListeners() {
     // Add task button
-    document.getElementById("add-task").addEventListener('click', () => {
+    document.getElementById("add-task").addEventListener("click", () => {
       this.addTask();
     });
 
-    // Enter key on input
-    document.getElementById("userInput").addEventListener('keypress', (event) => {
-      if (event.key === "Enter") {
-        this.addTask();
-      }
+    document.getElementById("signupBtn").addEventListener("click", () => {
+      // create user function
+      const email = document.getElementById("emailInput").value;
+      const password = document.getElementById("passwordInput").value;
+      this.createUser(email, password);
     });
 
+    document.getElementById("loginBtn").addEventListener("click", () => {
+      // create user function
+      const email = document.getElementById("emailInput").value;
+      const password = document.getElementById("passwordInput").value;
+      this.LogInUser(email, password);
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      this.signOut();
+    });
+
+    // Enter key on input
+    document
+      .getElementById("userInput")
+      .addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+          this.addTask();
+        }
+      });
+
     // Remove all tasks button
-    document.getElementById("remove").addEventListener('click', () => {
+    document.getElementById("remove").addEventListener("click", () => {
       this.removeAllTasks();
     });
 
     // Filter buttons
-    document.getElementById("all").addEventListener('click', () => {
+    document.getElementById("all").addEventListener("click", () => {
       this.showAll();
     });
 
-    document.getElementById("completed").addEventListener('click', () => {
+    document.getElementById("completed").addEventListener("click", () => {
       this.showCompletedTask();
     });
   }
 
   loadTasksFromStorage() {
-  const storedData = localStorage.getItem("tasks");
-  try {
-    if (storedData && storedData !== "undefined") {
-      this.tasks = JSON.parse(storedData);
-      for (let task of this.tasks) {
-        this.createListItem(task);
+    const storedData = localStorage.getItem("tasks");
+    try {
+      if (storedData && storedData !== "undefined") {
+        this.tasks = JSON.parse(storedData);
+        for (let task of this.tasks) {
+          this.createListItem(task);
+        }
       }
+    } catch (error) {
+      console.error("Error parsing tasks from storage:", error);
+      this.tasks = []; // reset if bad data
+      localStorage.removeItem("tasks");
     }
-  } catch (error) {
-    console.error("Error parsing tasks from storage:", error);
-    this.tasks = []; // reset if bad data
-    localStorage.removeItem("tasks");
   }
-}
-
 
   addTask() {
-      const text = document.getElementById("userInput").value.trim();
-      if (!text) return; // prevent blanks
+    const text = document.getElementById("userInput").value.trim();
+    if (!text) return; // prevent blanks
 
-      const newTask = { text: text, completed: false };
-      this.tasks.push(newTask);
-      localStorage.setItem("tasks", JSON.stringify(this.tasks));
-
-      this.createListItem(newTask); // use your function!
-
-      document.getElementById("userInput").value = "";
-}
-
-
-createListItem(task) {
-  var li = document.createElement("li");
-
-  const span = document.createElement("span");
-  span.textContent = task.text;
-  if (task.completed) {
-    span.style.textDecoration = "line-through";
-  }
-
-  const checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  checkbox.checked = task.completed;
-
-  checkbox.onchange = () => {
-    task.completed = checkbox.checked; // update the task
-    span.style.textDecoration = checkbox.checked ? "line-through" : "none"; // strike or unstrike
-    localStorage.setItem("tasks", JSON.stringify(this.tasks)); // save
-    li.remove();
-    if (checkbox.checked) {
-      document.getElementById("completedTask").appendChild(li);
-    } else document.getElementById("List").appendChild(li);
-  };
-
-  const deleteBtn = document.createElement("button");
-  deleteBtn.textContent = "Delete";
-
-  deleteBtn.onclick = () => {
-    li.remove();
-    this.tasks = this.tasks.filter((t) => t !== task);
+    const newTask = { text: text, completed: false };
+    this.tasks.push(newTask);
     localStorage.setItem("tasks", JSON.stringify(this.tasks));
-  };
 
-  li.appendChild(checkbox);
-  li.appendChild(span);
-  li.appendChild(deleteBtn);
+    this.createListItem(newTask); // use your function!
 
-  if (!task.completed) {
-    document.getElementById("List").appendChild(li);
-  } else {
-    document.getElementById("completedTask").appendChild(li);
+    document.getElementById("userInput").value = "";
+  }
+
+  createListItem(task) {
+    var li = document.createElement("li");
+
+    const span = document.createElement("span");
+    span.textContent = task.text;
+    if (task.completed) {
+      span.style.textDecoration = "line-through";
+    }
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = task.completed;
+
+    checkbox.onchange = () => {
+      task.completed = checkbox.checked; // update the task
+      span.style.textDecoration = checkbox.checked ? "line-through" : "none"; // strike or unstrike
+      localStorage.setItem("tasks", JSON.stringify(this.tasks)); // save
+      li.remove();
+      if (checkbox.checked) {
+        document.getElementById("completedTask").appendChild(li);
+      } else document.getElementById("List").appendChild(li);
+    };
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+
+    deleteBtn.onclick = () => {
+      li.remove();
+      this.tasks = this.tasks.filter((t) => t !== task);
+      localStorage.setItem("tasks", JSON.stringify(this.tasks));
+    };
+
+    li.appendChild(checkbox);
+    li.appendChild(span);
+    li.appendChild(deleteBtn);
+
+    if (!task.completed) {
+      document.getElementById("List").appendChild(li);
+    } else {
+      document.getElementById("completedTask").appendChild(li);
+    }
+  }
+
+  removeAllTasks() {
+    // 1. Clear the list visually
+    document.getElementById("List").innerHTML = "";
+    document.getElementById("completedTask").innerHTML = "";
+
+    // 2. Clear the array
+    this.tasks = [];
+
+    // 3. Clear localStorage
+    localStorage.removeItem("tasks");
+  }
+
+  showAll() {
+    const list = document.getElementById("List");
+    const list1 = document.getElementById("completedTask");
+    list.innerHTML = "";
+    list1.innerHTML = "";
+    this.tasks.forEach((task) => {
+      this.createListItem(task);
+    });
+  }
+
+  showCompletedTask() {
+    const list = document.getElementById("List");
+    const list1 = document.getElementById("completedTask");
+
+    list.innerHTML = "";
+    list1.innerHTML = "";
+
+    this.tasks.forEach((task) => {
+      if (task.completed) {
+        this.createListItem(task);
+      }
+    });
+  }
+
+  printTasks() {
+    console.log("All Tasks:", this.tasks);
+  }
+
+  createUser(email, password) {
+    const auth = window.firebaseAuth;
+    const createUserWithEmailAndPassword =
+      window.createUserWithEmailAndPassword;
+    if (!auth || !createUserWithEmailAndPassword) {
+      alert("Firebase Auth not loaded.");
+      return;
+    }
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        alert("User created: " + user.email);
+      })
+      .catch((error) => {
+        alert("Error: " + error.message);
+      });
+  }
+  LogInUser(email, password) {
+    const auth = window.firebaseAuth;
+    const signInWithEmailAndPassword = window.signInWithEmailAndPassword;
+    if (!auth || !signInWithEmailAndPassword) {
+      alert("Firebase Auth not loaded.");
+      return;
+    }
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        alert("User logged in: " + user.email);
+
+        // Update UI for logged-in state
+        document.getElementById("logoutBtn").style.display = "inline-block";
+        document.getElementById("signupBtn").style.display = "none";
+        document.getElementById("loginBtn").style.display = "none";
+
+        // Optionally display the user's email
+        const userEmailDisplay = document.createElement("p");
+        userEmailDisplay.id = "userEmailDisplay";
+        userEmailDisplay.textContent = "Logged in as: " + user.email;
+        document.getElementById("auth-section").appendChild(userEmailDisplay);
+      })
+      .catch((error) => {
+        alert("Error: " + error.message);
+      });
+  }
+
+  signOut() {
+    const auth = window.firebaseAuth;
+    signOut(auth)
+      .then(() => {
+        alert("Sign in successful");
+      })
+      .catch((error) => {
+        // An error happened.
+      });
   }
 }
-
-removeAllTasks() {
-  // 1. Clear the list visually
-  document.getElementById("List").innerHTML = "";
-  document.getElementById("completedTask").innerHTML = "";
-
-  // 2. Clear the array
-  this.tasks = [];
-
-  // 3. Clear localStorage
-  localStorage.removeItem("tasks");
-}
-
-showAll() {
-  const list = document.getElementById("List");
-  const list1 = document.getElementById("completedTask");
-  list.innerHTML = "";
-  list1.innerHTML = "";
-  this.tasks.forEach((task) => {
-    this.createListItem(task);
-  });
-}
-
-showCompletedTask() {
-  const list = document.getElementById("List");
-  const list1 = document.getElementById("completedTask");
-
-  list.innerHTML = "";
-  list1.innerHTML = "";
-
-  this.tasks.forEach((task) => {
-    if (task.completed) {
-      this.createListItem(task);
-    }
-  });
-}
-
-printTasks() {
-  console.log("All Tasks:", this.tasks);
-}
-
-
-};
 
 window.onload = function () {
   window.taskManager = new TaskManager();
