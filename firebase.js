@@ -37,3 +37,23 @@ loginBtn.addEventListener("click", function (e) {
       alert("fail");
     });
 });
+const signUpbtn = document.getElementById("signUp");
+signUpbtn.addEventListener("click", function (e) {
+  const email = document.getElementById("newEmail").value;
+  const password = document.getElementById("newPassword").value;
+  e.preventDefault();
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed up
+      const user = userCredential.user;
+      alert("Success");
+      window.location.href = "Home.html";
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      alert("failed");
+      // ..
+    });
+});
