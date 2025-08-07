@@ -2,6 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebas
 import {
   getAuth,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -17,20 +18,22 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-const signUp = document.getElementById("signupBtn");
-signUp.addEventListener("click", function (e) {
+const loginBtn = document.getElementById("loginBtn");
+loginBtn.addEventListener("click", function (e) {
   const email = document.getElementById("emailInput").value;
   const password = document.getElementById("passwordInput").value;
   e.preventDefault();
-  createUserWithEmailAndPassword(auth, email, password)
+  signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      // Signed up
+      // Signed in
       const user = userCredential.user;
+      alert("success");
       window.location.href = "Home.html";
+      // ...
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      alert("failed");
+      alert("fail");
     });
 });

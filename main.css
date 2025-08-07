@@ -1,0 +1,124 @@
+body {
+  background-image: url(imgs/spaceBackground.jpg);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  font-family: Arial, sans-serif;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+h1 {
+  text-align: center;
+  font-family: "Times New Roman", Times, serif;
+  color: white;
+  margin-top: 20px;
+}
+h3 {
+  text-align: center;
+  font-family: "Times New Roman", Times, serif;
+  color: white;
+  margin-bottom: 20px;
+}
+#add-task,
+#remove {
+  background: #4caf50; /* green for "add" */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin: 5px;
+}
+#remove {
+  background: #ff0000; /* red for "remove" */
+}
+.input-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 15px;
+  margin: 20px 0;
+}
+.task-input {
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  width: 300px;
+}
+.task-input::placeholder {
+  color: #888;
+}
+.lists {
+  list-style: none;
+  padding: 0;
+  margin: 20px auto; /* auto centers horizontally */
+  width: 400px;
+  text-align: center;
+}
+.lists li {
+  display: flex; /* puts items in a row */
+  justify-content: space-between;
+  align-items: center;
+  background: #f9f9f9;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.lists button {
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.lists button:hover {
+  background: #e60000;
+}
+.lists input[type="checkbox"] {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+.lists span {
+  flex: 1; /* span grows to fill space */
+  margin-left: 10px; /* space after checkbox */
+  font-size: 16px;
+}
+#productivity {
+  display: block;
+  margin: auto;
+  width: 30%;
+  height: auto;
+}
+.filter-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+.filter-group button {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.filter-group button:hover {
+  background: #0056b3;
+}
+#all,
+#completed {
+  display: flex;
+  justify-content: center;
+  width: 120px;
+}
