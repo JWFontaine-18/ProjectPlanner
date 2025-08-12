@@ -3,6 +3,9 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  onAuthStateChanged,
+  signOut, // added
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 import {
   getFirestore,
@@ -31,20 +34,20 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // DOM Elements
-const loginBtn = document.getElementById("loginBtn");
+const loginForm = document.getElementById("loginForm");
 const signUpBtn = document.getElementById("signUp");
+const forgotPasswordBtn = document.getElementById("forgotPassword");
+const signOutBtn = document.getElementById("signOut"); // added
 
 // Authentication Functions
-function handleLogin(email, password) {
-  return signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      alert("Login successful!");
-      window.location.href = "Home.html";
-    })
-    .catch((error) => {
-      console.error("Login error:", error.code, error.message);
-      alert("Login failed. Please check your credentials.");
-    });
+async function handleLogin(email, password) {
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    // No manual redirect here; the auth state observer below will handle it.
+  } catch (error) {
+    console.error("Login error:", error.code, error.message);
+    alert("Login failed. Please check your credentials.");
+  }
 }
 
 function handleSignUp(email, password) {
@@ -59,9 +62,30 @@ function handleSignUp(email, password) {
     });
 }
 
+function handleForgotPassword(email) {
+  return sendPasswordResetEmail(auth, email)
+    .then(() => {
+      alert("Password reset email sent!");
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+    });
+}
+
+async function handleSignOut() {
+  try {
+    await signOut(auth);
+    // No manual redirect; the non-login observer below handles it.
+  } catch (error) {
+    console.error("Sign out error:", error.code, error.message);
+    alert("Sign out failed. Please try again.");
+  }
+}
+
 // Event Listeners (guarded)
-if (loginBtn) {
-  loginBtn.addEventListener("click", function (e) {
+if (loginForm) {
+  loginForm.addEventListener("submit", function (e) {
     e.preventDefault();
     const email = document.getElementById("emailInput").value;
     const password = document.getElementById("passwordInput").value;
@@ -77,6 +101,42 @@ if (signUpBtn) {
     const password = document.getElementById("newPassword").value;
     if (email && password) handleSignUp(email, password);
     else alert("Please enter both email and password.");
+  });
+}
+
+if (forgotPasswordBtn) {
+  forgotPasswordBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    const email = document.getElementById("emailInput").value;
+    if (email) handleForgotPassword(email);
+    else alert("Please enter your email");
+  });
+}
+
+// Redirect authenticated users away from the login page (and after successful login)
+if (loginForm) {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // Use replace so the back button doesn't return to the login page
+      window.location.replace("Home.html");
+    }
+  });
+}
+
+// Protect non-login pages (e.g., Home.html). Redirect to your login page when signed out.
+if (!loginForm) {
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.replace("index.html"); // change to your actual login page if different
+    }
+  });
+}
+
+// Sign out button handler (only runs on pages that have the button)
+if (signOutBtn) {
+  signOutBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    handleSignOut();
   });
 }
 
@@ -100,4 +160,4 @@ async function addTask(text) {
   }
 }
 // Export for use in other modules
-export { auth, db, addTask };
+export { auth, db, addTask, handleSignOut };

@@ -35,6 +35,13 @@ h3 {
 #remove {
   background: #ff0000; /* red for "remove" */
 }
+#signOut {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+}
+
 .input-area {
   display: flex;
   justify-content: center;
@@ -43,6 +50,7 @@ h3 {
   gap: 15px;
   margin: 20px 0;
 }
+
 .task-input {
   background: #f0f0f0;
   border: 1px solid #ccc;
