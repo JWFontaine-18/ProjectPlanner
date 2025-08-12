@@ -1,3 +1,5 @@
+import { addTask as firebaseAddTask} from "./firebase.js";
+
 class TaskManager {
   constructor() {
     this.tasks = [];
@@ -5,7 +7,7 @@ class TaskManager {
   }
 
   init() {
-    this.loadTasksFromStorage();
+    // this.loadTasksFromStorage();
     this.setupEventListeners();
   }
 
@@ -41,33 +43,36 @@ class TaskManager {
     // Login button redirects to Home.html
   }
 
-  loadTasksFromStorage() {
-    const storedData = localStorage.getItem("tasks");
-    try {
-      if (storedData && storedData !== "undefined") {
-        this.tasks = JSON.parse(storedData);
-        for (let task of this.tasks) {
-          this.createListItem(task);
-        }
-      }
-    } catch (error) {
-      console.error("Error parsing tasks from storage:", error);
-      this.tasks = []; // reset if bad data
-      localStorage.removeItem("tasks");
+  // loadTasksFromStorage() {
+  //   const storedData = localStorage.getItem("tasks");
+  //   try {
+  //     if (storedData && storedData !== "undefined") {
+  //       this.tasks = JSON.parse(storedData);
+  //       for (let task of this.tasks) {
+  //         this.createListItem(task);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error parsing tasks from storage:", error);
+  //     this.tasks = []; // reset if bad data
+  //     localStorage.removeItem("tasks");
+  //   }
+  // }
+
+  async addTask() {
+    const input = document.getElementById("userInput");
+    const taskText = input.value.trim();
+
+    if (taskText === "") {
+      alert("Please enter a task!");
+      return;
     }
-  }
 
-  addTask() {
-    const text = document.getElementById("userInput").value.trim();
-    if (!text) return; // prevent blanks
+    // Add to Firebase
+    await firebaseAddTask(taskText);
 
-    const newTask = { text: text, completed: false };
-    this.tasks.push(newTask);
-    localStorage.setItem("tasks", JSON.stringify(this.tasks));
-
-    this.createListItem(newTask); // use your function!
-
-    document.getElementById("userInput").value = "";
+    // Clear input
+    input.value = "";
   }
 
   createListItem(task) {
