@@ -1,4 +1,4 @@
-import { addTask as firebaseAddTask} from "./firebase.js";
+import { addTask as firebaseAddTask } from "./firebase.js";
 
 class TaskManager {
   constructor() {

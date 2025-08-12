@@ -59,39 +59,37 @@ function handleSignUp(email, password) {
     });
 }
 
-// Event Listeners
-loginBtn.addEventListener("click", function (e) {
-  e.preventDefault();
-  const email = document.getElementById("emailInput").value;
-  const password = document.getElementById("passwordInput").value;
+// Event Listeners (guarded)
+if (loginBtn) {
+  loginBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    const email = document.getElementById("emailInput").value;
+    const password = document.getElementById("passwordInput").value;
+    if (email && password) handleLogin(email, password);
+    else alert("Please enter both email and password.");
+  });
+}
 
-  if (email && password) {
-    handleLogin(email, password);
-  } else {
-    alert("Please enter both email and password.");
-  }
-});
-
-signUpBtn.addEventListener("click", function (e) {
-  e.preventDefault();
-  const email = document.getElementById("newEmail").value;
-  const password = document.getElementById("newPassword").value;
-
-  if (email && password) {
-    handleSignUp(email, password);
-  } else {
-    alert("Please enter both email and password.");
-  }
-});
+if (signUpBtn) {
+  signUpBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    const email = document.getElementById("newEmail").value;
+    const password = document.getElementById("newPassword").value;
+    if (email && password) handleSignUp(email, password);
+    else alert("Please enter both email and password.");
+  });
+}
 
 // Firestore data
 async function addTask(text) {
   const user = auth.currentUser;
-  if (!user) return; // safety
-
+  if (!user) {
+    alert("You must be logged in to add tasks.");
+    return;
+  }
   try {
     await addDoc(collection(db, `users/${user.uid}/tasks`), {
-      text: text,
+      text,
       completed: false,
       createdAt: serverTimestamp(),
     });
