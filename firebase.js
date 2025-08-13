@@ -40,7 +40,7 @@ const db = getFirestore(app);
 // DOM elements (guarded usage in listeners below)
 // ==========================================================
 const loginForm = document.getElementById("loginForm");
-const signUpBtn = document.getElementById("signUp");
+const signUpForm = document.getElementById("signUpForm");
 const forgotPasswordBtn = document.getElementById("forgotPassword");
 const signOutBtn = document.getElementById("signOut");
 
@@ -60,7 +60,6 @@ async function handleLogin(email, password) {
 function handleSignUp(email, password) {
   return createUserWithEmailAndPassword(auth, email, password)
     .then(() => {
-      alert("Account created successfully!");
       // Keep manual redirect to maintain current behavior.
       window.location.href = "Home.html";
     })
@@ -106,8 +105,8 @@ if (loginForm) {
   });
 }
 
-if (signUpBtn) {
-  signUpBtn.addEventListener("click", (e) => {
+if (signUpForm) {
+  signUpForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const email = document.getElementById("newEmail").value;
     const password = document.getElementById("newPassword").value;
@@ -175,7 +174,6 @@ async function addTask(text) {
       completed: false,
       createdAt: serverTimestamp(),
     });
-    alert("Success");
   } catch (e) {
     console.error("Error adding task:", e);
     alert("failed");
