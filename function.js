@@ -1,14 +1,27 @@
-import { addTask as firebaseAddTask } from "./firebase.js";
+import {
+  addTask as firebaseAddTask,
+  subscribeToTasks,
+  updateTask as firebaseUpdateTask,
+  deleteTask as firebaseDeleteTask,
+} from "./firebase.js";
 
 class TaskManager {
   constructor() {
     this.tasks = [];
+    this.filter = "all";
+    this.unsubscribe = null;
     this.init();
   }
 
   init() {
     // this.loadTasksFromStorage();
     this.setupEventListeners();
+
+    // Subscribe to user's tasks in Firestore
+    this.unsubscribe = subscribeToTasks((tasks) => {
+      this.tasks = tasks;
+      this.renderTasks();
+    });
   }
 
   setupEventListeners() {
@@ -89,22 +102,20 @@ class TaskManager {
     checkbox.checked = task.completed;
 
     checkbox.onchange = () => {
-      task.completed = checkbox.checked; // update the task
-      span.style.textDecoration = checkbox.checked ? "line-through" : "none"; // strike or unstrike
-      localStorage.setItem("tasks", JSON.stringify(this.tasks)); // save
-      li.remove();
-      if (checkbox.checked) {
-        document.getElementById("completedTask").appendChild(li);
-      } else document.getElementById("List").appendChild(li);
+      // Update Firestore and optimistically update UI
+      firebaseUpdateTask(task.id, { completed: checkbox.checked });
+      const local = this.tasks.find((t) => t.id === task.id);
+      if (local) local.completed = checkbox.checked;
+      this.renderTasks();
     };
 
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
-
     deleteBtn.onclick = () => {
-      li.remove();
-      this.tasks = this.tasks.filter((t) => t !== task);
-      localStorage.setItem("tasks", JSON.stringify(this.tasks));
+      firebaseDeleteTask(task.id);
+      // Optimistically update UI
+      this.tasks = this.tasks.filter((t) => t.id !== task.id);
+      this.renderTasks();
     };
 
     li.appendChild(checkbox);
@@ -119,39 +130,32 @@ class TaskManager {
   }
 
   removeAllTasks() {
-    // 1. Clear the list visually
-    document.getElementById("List").innerHTML = "";
-    document.getElementById("completedTask").innerHTML = "";
-
-    // 2. Clear the array
-    this.tasks = [];
-
-    // 3. Clear localStorage
-    localStorage.removeItem("tasks");
+    // Delete all tasks from Firestore
+    Promise.all(this.tasks.map((t) => firebaseDeleteTask(t.id)));
   }
 
   showAll() {
-    const list = document.getElementById("List");
-    const list1 = document.getElementById("completedTask");
-    list.innerHTML = "";
-    list1.innerHTML = "";
-    this.tasks.forEach((task) => {
-      this.createListItem(task);
-    });
+    this.filter = "all";
+    this.renderTasks();
   }
 
   showCompletedTask() {
+    this.filter = "completed";
+    this.renderTasks();
+  }
+
+  renderTasks() {
     const list = document.getElementById("List");
-    const list1 = document.getElementById("completedTask");
-
+    const completedList = document.getElementById("completedTask");
     list.innerHTML = "";
-    list1.innerHTML = "";
+    completedList.innerHTML = "";
 
-    this.tasks.forEach((task) => {
-      if (task.completed) {
-        this.createListItem(task);
-      }
-    });
+    const tasksToShow =
+      this.filter === "completed"
+        ? this.tasks.filter((t) => t.completed)
+        : this.tasks;
+
+    tasksToShow.forEach((task) => this.createListItem(task));
   }
 
   printTasks() {

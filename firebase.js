@@ -5,7 +5,7 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
   onAuthStateChanged,
-  signOut, // added
+  signOut,
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 import {
   getFirestore,
@@ -16,6 +16,8 @@ import {
   updateDoc,
   deleteDoc,
   serverTimestamp,
+  query,
+  orderBy,
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 // Firebase Configuration
@@ -149,7 +151,7 @@ async function addTask(text) {
   }
   try {
     await addDoc(collection(db, `users/${user.uid}/tasks`), {
-      text,
+      text: text,
       completed: false,
       createdAt: serverTimestamp(),
     });
@@ -159,5 +161,57 @@ async function addTask(text) {
     alert("failed");
   }
 }
+
+// Subscribe to a user's tasks in real-time
+function subscribeToTasks(callback) {
+  const attach = (user) => {
+    const q = query(
+      collection(db, `users/${user.uid}/tasks`),
+      orderBy("createdAt", "asc")
+    );
+    return onSnapshot(q, (snapshot) => {
+      const tasks = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+      callback(tasks);
+    });
+  };
+
+  if (auth.currentUser) {
+    return attach(auth.currentUser);
+  }
+  const unsubAuth = onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const unsubTasks = attach(user);
+      // stop listening to auth changes once tasks stream is attached
+      unsubAuth();
+      // Note: if you need to unsubscribe from tasks later, call unsubTasks where you stored it.
+    }
+  });
+  return () => {
+    unsubAuth && unsubAuth();
+  };
+}
+
+// Update a single task
+async function updateTask(taskId, updates) {
+  const user = auth.currentUser;
+  if (!user) return;
+  await updateDoc(doc(db, `users/${user.uid}/tasks/${taskId}`), updates);
+}
+
+// Delete a single task
+async function deleteTask(taskId) {
+  const user = auth.currentUser;
+  if (!user) return;
+  await deleteDoc(doc(db, `users/${user.uid}/tasks/${taskId}`));
+}
+
 // Export for use in other modules
-export { auth, db, addTask, handleSignOut };
+export {
+  auth,
+  db,
+  addTask,
+  handleSignOut,
+  subscribeToTasks,
+  updateTask,
+  deleteTask,
+};
