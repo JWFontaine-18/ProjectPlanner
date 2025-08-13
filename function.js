@@ -5,16 +5,26 @@ import {
   deleteTask as firebaseDeleteTask,
 } from "./firebase.js";
 
+// Cache DOM references once for clarity and performance
+const dom = {
+  input: document.getElementById("userInput"),
+  addBtn: document.getElementById("add-task"),
+  removeAllBtn: document.getElementById("remove"),
+  list: document.getElementById("List"),
+  completedList: document.getElementById("completedTask"),
+  filterAllBtn: document.getElementById("all"),
+  filterCompletedBtn: document.getElementById("completed"),
+};
+
 class TaskManager {
   constructor() {
     this.tasks = [];
-    this.filter = "all";
+    this.filter = "all"; // "all" | "completed"
     this.unsubscribe = null;
     this.init();
   }
 
   init() {
-    // this.loadTasksFromStorage();
     this.setupEventListeners();
 
     // Subscribe to user's tasks in Firestore
@@ -25,107 +35,75 @@ class TaskManager {
   }
 
   setupEventListeners() {
-    // Add task button
-    document.getElementById("add-task").addEventListener("click", () => {
-      this.addTask();
-    });
+    // Add task on button click
+    dom.addBtn.addEventListener("click", () => this.addTask());
 
-    // Enter key on input
-    document
-      .getElementById("userInput")
-      .addEventListener("keypress", (event) => {
-        if (event.key === "Enter") {
-          this.addTask();
-        }
-      });
+    // Add task on Enter key in input
+    dom.input.addEventListener("keypress", (event) => {
+      if (event.key === "Enter") this.addTask();
+    });
 
     // Remove all tasks button
-    document.getElementById("remove").addEventListener("click", () => {
-      this.removeAllTasks();
-    });
+    dom.removeAllBtn.addEventListener("click", () => this.removeAllTasks());
 
-    // Filter buttons
-    document.getElementById("all").addEventListener("click", () => {
-      this.showAll();
-    });
-
-    document.getElementById("completed").addEventListener("click", () => {
-      this.showCompletedTask();
-    });
-
-    // Login button redirects to Home.html
+    // Filters
+    dom.filterAllBtn.addEventListener("click", () => this.showAll());
+    dom.filterCompletedBtn.addEventListener("click", () =>
+      this.showCompletedTasks()
+    );
   }
 
-  // loadTasksFromStorage() {
-  //   const storedData = localStorage.getItem("tasks");
-  //   try {
-  //     if (storedData && storedData !== "undefined") {
-  //       this.tasks = JSON.parse(storedData);
-  //       for (let task of this.tasks) {
-  //         this.createListItem(task);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error parsing tasks from storage:", error);
-  //     this.tasks = []; // reset if bad data
-  //     localStorage.removeItem("tasks");
-  //   }
-  // }
-
   async addTask() {
-    const input = document.getElementById("userInput");
-    const taskText = input.value.trim();
-
-    if (taskText === "") {
+    const taskText = dom.input.value.trim();
+    if (!taskText) {
       alert("Please enter a task!");
       return;
     }
 
-    // Add to Firebase
     await firebaseAddTask(taskText);
-
-    // Clear input
-    input.value = "";
+    dom.input.value = "";
   }
 
   createListItem(task) {
-    var li = document.createElement("li");
-
-    const span = document.createElement("span");
-    span.textContent = task.text;
-    if (task.completed) {
-      span.style.textDecoration = "line-through";
-    }
+    const li = document.createElement("li");
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.checked = task.completed;
 
-    checkbox.onchange = () => {
-      // Update Firestore and optimistically update UI
-      firebaseUpdateTask(task.id, { completed: checkbox.checked });
-      const local = this.tasks.find((t) => t.id === task.id);
-      if (local) local.completed = checkbox.checked;
-      this.renderTasks();
-    };
+    const span = document.createElement("span");
+    span.textContent = task.text;
+    if (task.completed) span.style.textDecoration = "line-through";
 
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
-    deleteBtn.onclick = () => {
+
+    // Toggle completion state
+    checkbox.addEventListener("change", () => {
+      firebaseUpdateTask(task.id, { completed: checkbox.checked });
+      // Optimistic UI update mirrors Firestore value
+      const local = this.tasks.find((t) => t.id === task.id);
+      if (local) local.completed = checkbox.checked;
+      this.renderTasks();
+    });
+
+    // Delete task
+    deleteBtn.addEventListener("click", () => {
       firebaseDeleteTask(task.id);
-      // Optimistically update UI
+      // Optimistic UI update
       this.tasks = this.tasks.filter((t) => t.id !== task.id);
       this.renderTasks();
-    };
+    });
 
     li.appendChild(checkbox);
     li.appendChild(span);
     li.appendChild(deleteBtn);
 
+    // Append to appropriate list based on completion state
     if (!task.completed) {
-      document.getElementById("List").appendChild(li);
+      dom.list.appendChild(li);
     } else {
-      document.getElementById("completedTask").appendChild(li);
+      dom.completedList.appendChild(li);
     }
   }
 
@@ -139,16 +117,14 @@ class TaskManager {
     this.renderTasks();
   }
 
-  showCompletedTask() {
+  showCompletedTasks() {
     this.filter = "completed";
     this.renderTasks();
   }
 
   renderTasks() {
-    const list = document.getElementById("List");
-    const completedList = document.getElementById("completedTask");
-    list.innerHTML = "";
-    completedList.innerHTML = "";
+    dom.list.innerHTML = "";
+    dom.completedList.innerHTML = "";
 
     const tasksToShow =
       this.filter === "completed"
@@ -157,11 +133,17 @@ class TaskManager {
 
     tasksToShow.forEach((task) => this.createListItem(task));
   }
-
-  printTasks() {
-    console.log("All Tasks:", this.tasks);
-  }
 }
+
+window.onload = () => {
+  window.taskManager = new TaskManager();
+};
+const tasksToShow =
+  this.filter === "completed"
+    ? this.tasks.filter((t) => t.completed)
+    : this.tasks;
+
+tasksToShow.forEach((task) => this.createListItem(task));
 
 window.onload = function () {
   window.taskManager = new TaskManager();
