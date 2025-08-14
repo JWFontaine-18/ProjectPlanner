@@ -1,0 +1,163 @@
+/* ==========================================================
+   Home (Task Tracker) page styles
+   - Formatting and comments added for clarity
+   - No visual or behavioral changes
+   ========================================================== */
+
+/* 1) Base layout */
+body {
+  background-color: #ebebeb; /* fallback solid bg */
+  font-family: Arial, sans-serif;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+/* 2) Headings */
+h1 {
+  text-align: center;
+  font-family: "Times New Roman", Times, serif;
+  color: rgb(0, 0, 0);
+  margin-top: 20px;
+}
+h3 {
+  text-align: center;
+  font-family: "Times New Roman", Times, serif;
+  color: rgb(0, 0, 0);
+  margin-bottom: 20px;
+}
+
+/* 3) Primary action buttons */
+#add-task,
+#remove {
+  background: #4caf50; /* green for add */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin: 5px;
+}
+#remove {
+  background: #ff0000; /* red for remove */
+}
+
+/* 4) Sign out button placement */
+#signOut {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+}
+
+/* 5) Input row */
+.input-area {
+  display: flex;
+  justify-content: flex-start;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+/* 6) Text input */
+.task-input {
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  width: 300px;
+}
+.task-input::placeholder {
+  color: #888;
+}
+
+/* 7) Lists container */
+.lists {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0; /* left-aligned block */
+  width: 25%;
+  text-align: left;
+}
+
+/* 8) List items */
+.lists li {
+  display: flex;
+  justify-content: space-between;
+  background: #f9f9f9;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* 9) Delete button within list */
+.lists button {
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.lists button:hover {
+  background: #e60000;
+}
+
+/* 10) Checkbox scale */
+.lists input[type="checkbox"] {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+/* 11) Task text area */
+.lists span {
+  flex: 1;
+  margin-left: 10px;
+  font-size: 16px;
+}
+
+/* 13) Filter controls */
+.filter-group {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  margin: 20px 0;
+}
+.filter-group button {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.filter-group button:hover {
+  background: #0056b3;
+}
+
+/* 14) Filter button widths */
+#all,
+#completed {
+  display: inline-flex;
+  justify-content: flex-start;
+  width: 120px;
+}
+
+.filter-group button:hover {
+  background: #0056b3;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+/* 14) Filter button widths */
+#all,
+#completed {
+  display: inline-flex;
+  justify-content: flex-start;
+  width: 120px;
+}

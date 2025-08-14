@@ -1,0 +1,119 @@
+/* ==========================================================
+   Login/Registration styles (used by index.html)
+   - Formatting and comments added for clarity
+   - No visual or behavioral changes
+   ========================================================== */
+
+/* 1) Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+/* 2) Reset and base typography */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* 3) Page background */
+body {
+  min-height: 100vh;
+  background: #ebebeb; /* light gray background */
+}
+
+/* 4) Centered auth card container */
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 430px;
+  width: 100%;
+  background: #fff;
+  border-radius: 7px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* 5) Login / Signup toggle via hidden checkbox */
+.container .registration {
+  /* signup panel hidden by default */
+  display: none;
+}
+#check:checked ~ .registration {
+  /* show signup when toggled */
+  display: block;
+}
+#check:checked ~ .login {
+  /* hide login when toggled */
+  display: none;
+}
+#check {
+  /* hidden checkbox driving the toggle */
+  display: none;
+}
+
+/* 6) Form wrapper padding */
+.container .form {
+  padding: 2rem;
+}
+
+/* 7) Form header (title) */
+.form header {
+  font-size: 2rem;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* 8) Form inputs */
+.form input {
+  height: 60px;
+  width: 100%;
+  padding: 0 15px;
+  font-size: 17px;
+  margin-bottom: 1.3rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+}
+.form input:focus {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* 9) Inline links (forgot password, etc.) */
+.form a {
+  font-size: 16px;
+  color: #009579;
+  text-decoration: none;
+}
+.form a:hover {
+  text-decoration: underline;
+}
+
+/* 10) Primary form button */
+.form input.button {
+  color: #fff;
+  background: #009579;
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin-top: 1.7rem;
+  cursor: pointer;
+  transition: 0.4s;
+}
+.form input.button:hover {
+  background: #006653;
+}
+
+/* 11) Footer text + toggle label */
+.signup {
+  font-size: 17px;
+  text-align: center;
+}
+.signup label {
+  color: #009579;
+  cursor: pointer;
+}
+.signup label:hover {
+  text-decoration: underline;
+}

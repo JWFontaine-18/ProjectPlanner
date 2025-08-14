@@ -1,18 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Meta and document settings -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Page title -->
     <title>Task Tracker</title>
-    <link rel="stylesheet" href="main.css" />
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="home.css" />
+
+    <!-- App scripts -->
     <script type="module" src="function.js" defer></script>
     <script type="module" src="firebase.js" defer></script>
   </head>
   <body>
+    <!-- Fixed sign out button -->
     <button id="signOut" type="button">Sign Out</button>
+
+    <!-- Page header -->
     <h1>Task Tracker V1</h1>
     <br />
 
+    <!-- Input row: add tasks / delete all -->
     <div class="input-area">
       <input
         type="text"
@@ -24,13 +35,18 @@
       <button id="add-task" type="submit">Add Task</button>
       <button id="remove" type="submit">Delete List</button>
     </div>
+
+    <!-- Filter controls -->
     <div class="filter-group">
       <button class="filter-btn" id="all">Show All</button>
       <button class="filter-btn" id="completed">✔</button>
     </div>
+
+    <!-- Task lists (rendered by JS) -->
     <div class="lists">
       <h3>All Tasks</h3>
       <ul id="List"></ul>
+
       <h3>Completed Tasks</h3>
       <ul id="completedTask"></ul>
     </div>
