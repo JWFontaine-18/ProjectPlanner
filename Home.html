@@ -4,12 +4,12 @@
     <!-- Meta and document settings -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Page title -->
     <title>Task Tracker</title>
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="home.css" />
+    <!-- <link rel="stylesheet" href="home.css" /> -->
 
     <!-- App scripts -->
     <script type="module" src="function.js" defer></script>
@@ -17,38 +17,83 @@
   </head>
   <body>
     <!-- Fixed sign out button -->
-    <button id="signOut" type="button">Sign Out</button>
+    <button
+      id="signOut"
+      class="fixed top-3 right-3 bg-gray-200 hover:bg-gray-300 text-sm px-4 py-2 rounded"
+    >
+      Sign Out
+    </button>
 
     <!-- Page header -->
-    <h1>Task Tracker V1</h1>
     <br />
-
     <!-- Input row: add tasks / delete all -->
-    <div class="input-area">
-      <input
-        type="text"
-        id="userInput"
-        name="Task"
-        placeholder="Enter Task"
-        class="task-input"
-      />
-      <button id="add-task" type="submit">Add Task</button>
-      <button id="remove" type="submit">Delete List</button>
-    </div>
-
-    <!-- Filter controls -->
-    <div class="filter-group">
-      <button class="filter-btn" id="all">Show All</button>
-      <button class="filter-btn" id="completed">✔</button>
+    <div class="flex flex-col items-center gap-4 mb-6 w-[650px]">
+      <div class="flex flex-col items-start gap-3 ml-5 mt-5">
+        <!-- Input -->
+        <input
+          type="text"
+          id="userInput"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 w-64 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Add New Task"
+        />
+        <!-- Buttons centered under input -->
+        <div class="flex gap-2 w-64 justify-center">
+          <button
+            id="add-task"
+            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm"
+          >
+            Add
+          </button>
+          <button
+            id="remove"
+            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm"
+          >
+            Delete List
+          </button>
+        </div>
+      </div>
+      <!-- Filter controls -->
+      <div class="flex gap-2 mt-5">
+        <button
+          id="all"
+          class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm"
+        >
+          Show All Items
+        </button>
+        <button
+          id="completed"
+          class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm"
+        >
+          Show Completed
+        </button>
+      </div>
     </div>
 
     <!-- Task lists (rendered by JS) -->
-    <div class="lists">
-      <h3>All Tasks</h3>
-      <ul id="List"></ul>
+    <div class="lists space-y-20 mt-8 ml-5">
+      <!-- All Tasks -->
+      <div class="max-w-2xl">
+        <h3 class="text-lg font-semibold mb-3 border-b pb-1">All Tasks</h3>
+        <ul
+          id="List"
+          class="bg-white shadow overflow-hidden sm:rounded-md divide-y divide-gray-200"
+        >
+          <!-- JS inserts <li> here -->
+        </ul>
+      </div>
 
-      <h3>Completed Tasks</h3>
-      <ul id="completedTask"></ul>
+      <!-- Completed Tasks -->
+      <div class="max-w-2xl">
+        <h3 class="text-lg font-semibold mb-3 border-b pb-1">
+          Completed Tasks
+        </h3>
+        <ul
+          id="completedTask"
+          class="bg-white shadow overflow-hidden sm:rounded-md divide-y divide-gray-200"
+        >
+          <!-- JS inserts <li> here -->
+        </ul>
+      </div>
     </div>
   </body>
 </html>

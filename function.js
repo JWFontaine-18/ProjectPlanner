@@ -65,41 +65,65 @@ class TaskManager {
   }
 
   createListItem(task) {
+    // <li> row shell
     const li = document.createElement("li");
+    li.className = "px-4 py-5 sm:px-6 hover:bg-gray-50";
 
+    // Row: [checkbox | centered text | delete]
+    const row = document.createElement("div");
+    row.className = "flex items-center justify-between w-full";
+
+    // Left: checkbox
+    const checkboxContainer = document.createElement("div");
+    checkboxContainer.className = "flex items-center";
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.checked = task.completed;
+    checkbox.className = "scale-110 cursor-pointer";
+    checkboxContainer.appendChild(checkbox);
 
+    // Center: text (fills remaining space and centers)
+    const textContainer = document.createElement("div");
+    textContainer.className = "flex-1 flex justify-center";
     const span = document.createElement("span");
     span.textContent = task.text;
-    if (task.completed) span.style.textDecoration = "line-through";
+    span.className = task.completed
+      ? "text-gray-500 line-through"
+      : "text-gray-900";
+    textContainer.appendChild(span);
 
+    // Right: delete button
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
+    deleteBtn.className =
+      "px-2.5 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700";
 
-    // Toggle completion state
+    // Assemble row
+    row.appendChild(checkboxContainer);
+    row.appendChild(textContainer);
+    row.appendChild(deleteBtn);
+    li.appendChild(row);
+
+    // Events (unchanged logic)
     checkbox.addEventListener("change", () => {
       firebaseUpdateTask(task.id, { completed: checkbox.checked });
-      // Optimistic UI update mirrors Firestore value
       const local = this.tasks.find((t) => t.id === task.id);
       if (local) local.completed = checkbox.checked;
+
+      // Reflect style instantly
+      span.className = checkbox.checked
+        ? "text-gray-500 line-through"
+        : "text-gray-900";
       this.renderTasks();
     });
 
-    // Delete task
     deleteBtn.addEventListener("click", () => {
       firebaseDeleteTask(task.id);
-      // Optimistic UI update
       this.tasks = this.tasks.filter((t) => t.id !== task.id);
       this.renderTasks();
     });
 
-    li.appendChild(checkbox);
-    li.appendChild(span);
-    li.appendChild(deleteBtn);
-
-    // Append to appropriate list based on completion state
+    // Append to appropriate list
     if (!task.completed) {
       dom.list.appendChild(li);
     } else {
@@ -138,12 +162,6 @@ class TaskManager {
 window.onload = () => {
   window.taskManager = new TaskManager();
 };
-const tasksToShow =
-  this.filter === "completed"
-    ? this.tasks.filter((t) => t.completed)
-    : this.tasks;
-
-tasksToShow.forEach((task) => this.createListItem(task));
 
 window.onload = function () {
   window.taskManager = new TaskManager();
