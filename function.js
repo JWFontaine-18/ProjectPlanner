@@ -14,6 +14,7 @@ const dom = {
   completedList: document.getElementById("completedTask"),
   filterAllBtn: document.getElementById("all"),
   filterCompletedBtn: document.getElementById("completed"),
+  dueDate: document.getElementById("dueDate"),
 };
 
 class TaskManager {
@@ -55,67 +56,59 @@ class TaskManager {
 
   async addTask() {
     const taskText = dom.input.value.trim();
-    if (!taskText) {
+    const dueDate = dom.dueDate.value.trim();
+    if (!taskText || !dueDate) {
       alert("Please enter a task!");
       return;
     }
 
-    await firebaseAddTask(taskText);
+    await firebaseAddTask(taskText, dueDate);
     dom.input.value = "";
+    dom.dueDate.value = "";
   }
 
-  createListItem(task) {
-    // <li> row shell
-    const li = document.createElement("li");
-    li.className = "px-4 py-5 sm:px-6 hover:bg-gray-50";
-
-    // Row: [checkbox | centered text | delete]
-    const row = document.createElement("div");
-    row.className = "flex items-center justify-between w-full";
-
-    // Left: checkbox
+  _buildCheckbox(task, onToggle) {
     const checkboxContainer = document.createElement("div");
     checkboxContainer.className = "flex items-center";
+
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.checked = task.completed;
     checkbox.className = "scale-110 cursor-pointer";
-    checkboxContainer.appendChild(checkbox);
 
-    // Center: text (fills remaining space and centers)
+    checkbox.addEventListener("change", () => onToggle(checkbox.checked));
+
+    checkboxContainer.appendChild(checkbox);
+    return checkboxContainer;
+  }
+
+  _buildText(task) {
     const textContainer = document.createElement("div");
-    textContainer.className = "flex-1 flex justify-center";
+    textContainer.className = "flex-1 flex flex-col items-center";
+
     const span = document.createElement("span");
     span.textContent = task.text;
     span.className = task.completed
       ? "text-gray-500 line-through"
       : "text-gray-900";
+
     textContainer.appendChild(span);
 
-    // Right: delete button
+    if (task.dueDate) {
+      const due = document.createElement("span");
+      due.textContent = `Due: ${task.dueDate}`;
+      due.className = "text-xs text-gray-500";
+      textContainer.appendChild(due);
+    }
+
+    return { textContainer, span };
+  }
+
+  _buildDeleteButton(task) {
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
     deleteBtn.className =
       "px-2.5 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700";
-
-    // Assemble row
-    row.appendChild(checkboxContainer);
-    row.appendChild(textContainer);
-    row.appendChild(deleteBtn);
-    li.appendChild(row);
-
-    // Events (unchanged logic)
-    checkbox.addEventListener("change", () => {
-      firebaseUpdateTask(task.id, { completed: checkbox.checked });
-      const local = this.tasks.find((t) => t.id === task.id);
-      if (local) local.completed = checkbox.checked;
-
-      // Reflect style instantly
-      span.className = checkbox.checked
-        ? "text-gray-500 line-through"
-        : "text-gray-900";
-      this.renderTasks();
-    });
 
     deleteBtn.addEventListener("click", () => {
       firebaseDeleteTask(task.id);
@@ -123,7 +116,34 @@ class TaskManager {
       this.renderTasks();
     });
 
-    // Append to appropriate list
+    return deleteBtn;
+  }
+
+  createListItem(task) {
+    const li = document.createElement("li");
+    li.className = "px-4 py-5 sm:px-6 hover:bg-gray-50";
+
+    const row = document.createElement("div");
+    row.className = "flex items-center justify-between w-full";
+
+    const { textContainer, span } = this._buildText(task);
+    const checkboxContainer = this._buildCheckbox(task, (checked) => {
+      firebaseUpdateTask(task.id, { completed: checked });
+      const local = this.tasks.find((t) => t.id === task.id);
+      if (local) local.completed = checked;
+
+      // Reflect style instantly
+      span.className = checked ? "text-gray-500 line-through" : "text-gray-900";
+
+      this.renderTasks();
+    });
+    const deleteBtn = this._buildDeleteButton(task);
+
+    row.appendChild(checkboxContainer);
+    row.appendChild(textContainer);
+    row.appendChild(deleteBtn);
+    li.appendChild(row);
+
     if (!task.completed) {
       dom.list.appendChild(li);
     } else {
@@ -159,10 +179,7 @@ class TaskManager {
   }
 }
 
+// Single onload initializer (removed duplicate definition)
 window.onload = () => {
-  window.taskManager = new TaskManager();
-};
-
-window.onload = function () {
   window.taskManager = new TaskManager();
 };

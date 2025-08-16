@@ -136,18 +136,7 @@ h3 {
   cursor: pointer;
   transition: background 0.2s ease;
 }
-.filter-group button:hover {
-  background: #0056b3;
-}
-
-/* 14) Filter button widths */
-#all,
-#completed {
-  display: inline-flex;
-  justify-content: flex-start;
-  width: 120px;
-}
-
+/* keep only one hover rule (the more specific final one) */
 .filter-group button:hover {
   background: #0056b3;
   cursor: pointer;

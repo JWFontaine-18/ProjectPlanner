@@ -162,7 +162,7 @@ if (!loginForm) {
 // Firestore: task helpers
 // ==========================================================
 // Add a task for the current user.
-async function addTask(text) {
+async function addTask(text, dueDate) {
   const user = auth.currentUser;
   if (!user) {
     alert("You must be logged in to add tasks.");
@@ -172,6 +172,7 @@ async function addTask(text) {
     await addDoc(collection(db, `users/${user.uid}/tasks`), {
       text,
       completed: false,
+      dueDate: dueDate, 
       createdAt: serverTimestamp(),
     });
   } catch (e) {
