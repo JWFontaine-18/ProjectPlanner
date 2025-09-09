@@ -74,7 +74,7 @@ class TaskManager {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.checked = task.completed;
-    checkbox.className = "scale-110 cursor-pointer";
+    checkbox.className = "w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer";
 
     checkbox.addEventListener("change", () => onToggle(checkbox.checked));
 
@@ -84,20 +84,20 @@ class TaskManager {
 
   _buildText(task) {
     const textContainer = document.createElement("div");
-    textContainer.className = "flex-1 flex flex-col items-center";
+    textContainer.className = "flex-1 flex flex-col items-start";
 
     const span = document.createElement("span");
     span.textContent = task.text;
     span.className = task.completed
-      ? "text-gray-500 line-through"
-      : "text-gray-900";
+      ? "text-gray-500 line-through font-medium"
+      : "text-gray-900 font-medium";
 
     textContainer.appendChild(span);
 
     if (task.dueDate) {
       const due = document.createElement("span");
       due.textContent = `Due: ${task.dueDate}`;
-      due.className = "text-xs text-gray-500";
+      due.className = "text-sm text-gray-500 mt-1 bg-gray-100 px-2 py-1 rounded-md inline-block";
       textContainer.appendChild(due);
     }
 
@@ -108,7 +108,7 @@ class TaskManager {
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
     deleteBtn.className =
-      "px-2.5 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700";
+      "px-3 py-1.5 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-150 font-medium shadow-sm";
 
     deleteBtn.addEventListener("click", () => {
       firebaseDeleteTask(task.id);
@@ -121,10 +121,10 @@ class TaskManager {
 
   createListItem(task) {
     const li = document.createElement("li");
-    li.className = "px-4 py-5 sm:px-6 hover:bg-gray-50";
+    li.className = "px-6 py-4 hover:bg-gray-50 transition-colors duration-150";
 
     const row = document.createElement("div");
-    row.className = "flex items-center justify-between w-full";
+    row.className = "flex items-center justify-between w-full gap-4";
 
     const { textContainer, span } = this._buildText(task);
     const checkboxContainer = this._buildCheckbox(task, (checked) => {

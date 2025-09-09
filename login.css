@@ -18,20 +18,20 @@
 /* 3) Page background */
 body {
   min-height: 100vh;
-  background: #ebebeb; /* light gray background */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* 4) Centered auth card container */
 .container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   max-width: 430px;
   width: 100%;
   background: #fff;
-  border-radius: 7px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* 5) Login / Signup toggle via hidden checkbox */
@@ -54,66 +54,93 @@ body {
 
 /* 6) Form wrapper padding */
 .container .form {
-  padding: 2rem;
+  padding: 3rem 2.5rem;
 }
 
 /* 7) Form header (title) */
 .form header {
-  font-size: 2rem;
-  font-weight: 500;
+  font-size: 2.2rem;
+  font-weight: 600;
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+  letter-spacing: -0.5px;
 }
 
 /* 8) Form inputs */
 .form input {
-  height: 60px;
+  height: 56px;
   width: 100%;
-  padding: 0 15px;
-  font-size: 17px;
-  margin-bottom: 1.3rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  padding: 0 18px;
+  font-size: 16px;
+  margin-bottom: 1.5rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 12px;
   outline: none;
+  background: #f8f9fa;
+  transition: all 0.3s ease;
+  color: #2c3e50;
 }
 .form input:focus {
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+  border-color: #667eea;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  transform: translateY(-1px);
+}
+.form input::placeholder {
+  color: #95a5a6;
 }
 
 /* 9) Inline links (forgot password, etc.) */
 .form a {
-  font-size: 16px;
-  color: #009579;
+  font-size: 15px;
+  color: #667eea;
   text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 .form a:hover {
-  text-decoration: underline;
+  color: #5a67d8;
+  text-decoration: none;
 }
 
 /* 10) Primary form button */
 .form input.button {
   color: #fff;
-  background: #009579;
-  font-size: 1.2rem;
-  font-weight: 500;
-  letter-spacing: 1px;
-  margin-top: 1.7rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-top: 1.5rem;
   cursor: pointer;
-  transition: 0.4s;
+  transition: all 0.3s ease;
+  border: none;
+  height: 52px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 .form input.button:hover {
-  background: #006653;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+.form input.button:active {
+  transform: translateY(0);
 }
 
 /* 11) Footer text + toggle label */
 .signup {
-  font-size: 17px;
+  font-size: 15px;
   text-align: center;
+  color: #7f8c8d;
+  margin-top: 1.5rem;
 }
 .signup label {
-  color: #009579;
+  color: #667eea;
   cursor: pointer;
+  font-weight: 600;
+  transition: color 0.2s ease;
 }
 .signup label:hover {
-  text-decoration: underline;
+  color: #5a67d8;
+  text-decoration: none;
 }

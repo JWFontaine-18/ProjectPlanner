@@ -15,11 +15,11 @@
     <script type="module" src="function.js" defer></script>
     <script type="module" src="firebase.js" defer></script>
   </head>
-  <body>
+  <body class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
     <!-- Fixed sign out button -->
     <button
       id="signOut"
-      class="fixed top-3 right-3 bg-gray-200 hover:bg-gray-300 text-sm px-4 py-2 rounded"
+      class="fixed top-4 right-4 bg-white hover:bg-gray-50 text-gray-700 text-sm px-4 py-2 rounded-xl shadow-lg border border-gray-200 transition-all duration-200 hover:shadow-xl z-50"
     >
       Sign Out
     </button>
@@ -27,47 +27,48 @@
     <!-- Page header -->
     <br />
     <!-- Input row: add tasks / delete all -->
-    <div class="flex flex-col items-center gap-4 mb-6 w-[650px]">
-      <div class="flex flex-col items-start gap-3 ml-5 mt-5">
+    <div class="flex flex-col items-center gap-6 mb-8 max-w-md mx-auto">
+      <div class="w-full bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">Add New Task</h2>
         <!-- Input -->
         <input
           type="text"
           id="userInput"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 w-64 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="Add New Task"
+          class="w-full bg-gray-50 border-2 border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 p-4 mb-3 transition-all duration-200 placeholder-gray-400"
+          placeholder="What needs to be done?"
         />
         <input
           type="date"
           id="dueDate"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 w-64 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class="w-full bg-gray-50 border-2 border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 p-4 mb-4 transition-all duration-200"
         />
-        <!-- Buttons centered under input -->
-        <div class="flex gap-2 w-64 justify-center">
+        <!-- Buttons -->
+        <div class="flex gap-3">
           <button
             id="add-task"
-            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm"
+            class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
           >
-            Add
+            Add Task
           </button>
           <button
             id="remove"
-            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm"
+            class="bg-gray-100 hover:bg-red-50 text-gray-700 hover:text-red-700 font-medium py-3 px-4 rounded-xl transition-all duration-200 border-2 border-gray-200 hover:border-red-200"
           >
-            Delete List
+            Clear All
           </button>
         </div>
       </div>
       <!-- Filter controls -->
-      <div class="flex gap-2 mt-5">
+      <div class="flex gap-3 bg-white rounded-2xl shadow-lg border border-gray-100 p-4">
         <button
           id="all"
-          class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm"
+          class="flex-1 px-4 py-2 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white rounded-xl text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-md"
         >
-          Show All Items
+          Show All Tasks
         </button>
         <button
           id="completed"
-          class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm"
+          class="flex-1 px-4 py-2 bg-gray-100 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-500 text-gray-700 hover:text-white rounded-xl text-sm font-medium transition-all duration-200 transform hover:scale-105 border-2 border-gray-200 hover:border-transparent"
         >
           Show Completed
         </button>
@@ -75,26 +76,38 @@
     </div>
 
     <!-- Task lists (rendered by JS) -->
-    <div class="lists space-y-20 mt-8 ml-5">
+    <div class="max-w-4xl mx-auto px-4 space-y-8">
       <!-- All Tasks -->
-      <div class="max-w-2xl">
-        <h3 class="text-lg font-semibold mb-3 border-b pb-1">All Tasks</h3>
+      <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-50 to-purple-50 px-6 py-4 border-b border-gray-100">
+          <h3 class="text-xl font-semibold text-gray-800 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+            </svg>
+            All Tasks
+          </h3>
+        </div>
         <ul
           id="List"
-          class="bg-white shadow overflow-hidden sm:rounded-md divide-y divide-gray-200"
+          class="divide-y divide-gray-100"
         >
           <!-- JS inserts <li> here -->
         </ul>
       </div>
 
       <!-- Completed Tasks -->
-      <div class="max-w-2xl">
-        <h3 class="text-lg font-semibold mb-3 border-b pb-1">
-          Completed Tasks
-        </h3>
+      <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div class="bg-gradient-to-r from-green-50 to-teal-50 px-6 py-4 border-b border-gray-100">
+          <h3 class="text-xl font-semibold text-gray-800 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            </svg>
+            Completed Tasks
+          </h3>
+        </div>
         <ul
           id="completedTask"
-          class="bg-white shadow overflow-hidden sm:rounded-md divide-y divide-gray-200"
+          class="divide-y divide-gray-100"
         >
           <!-- JS inserts <li> here -->
         </ul>
